@@ -1,0 +1,17 @@
+{
+    "message": "hello i18n !!",
+    "todo": {
+        "title": "What needs to be done",
+        "checkall": "Check All",
+        "items": "items left",
+        "clear": "Clear Completed",
+        "undo": "Undo Action",
+        "redo": "Redo Action"
+    },
+    "model": {
+        "head": "Confirm delete",
+        "sure": "Are you sure you want to delete",
+        "cancel": "Cancel",
+        "delete": "Delete"
+    }
+}

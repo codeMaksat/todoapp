@@ -1,0 +1,17 @@
+{
+    "message": "Salam i18n !!",
+    "todo": {
+        "title": "Näme etsem goýsamyň bar?",
+        "checkall": "Hemmesini belle",
+        "items": "sany galdy",
+        "clear": "Poz",
+        "undo": "Yza",
+        "redo": "Öňe"
+    },
+    "model": {
+        "head": "Tassykla",
+        "sure": "Siz hakykatdanam pozmak isleyanizmi",
+        "cancel": "Yok",
+        "delete": "Hawa"
+    }
+}
