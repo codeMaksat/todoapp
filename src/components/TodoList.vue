@@ -58,10 +58,8 @@
               >
               <form class="modal-content">
                 <div class="container">
-                  <h1> {{ $t("model.head") }} </h1>
-                  <p>
-                    {{ $t("model.sure") }}?
-                  </p>
+                  <h1>{{ $t("model.head") }}</h1>
+                  <p>{{ $t("model.sure") }}?</p>
 
                   <div class="clearfix">
                     <button
@@ -105,8 +103,7 @@
       <div>
         <transition name="fade">
           <button
-          :disabled="!showClearCompletedButton"
-            
+            :disabled="!showClearCompletedButton"
             @click="clearCompleted"
             class="cleartodo"
           >
@@ -116,13 +113,19 @@
       </div>
     </div>
   </div>
+
 </template>
 
 
 
 <script>
+import Before from "../assets/before.js";
+
 export default {
   name: "todo-list",
+  components: {
+    Before
+  },
   data() {
     return {
       newTodo: "",
@@ -130,18 +133,18 @@ export default {
       beforeEditCache: "",
       filter: "all",
       show: false,
-       todos: [
+      todos: [
         {
-          'id': 1,
-          'title': 'Finish Vue Screencast',
-          'completed': false,
-          'editing': false,
+          id: 1,
+          title: "Finish Vue Screencast",
+          completed: false,
+          editing: false,
         },
         {
-          'id': 2,
-          'title': 'Take over world',
-          'completed': false,
-          'editing': false,
+          id: 2,
+          title: "Take over world",
+          completed: false,
+          editing: false,
         },
       ],
       langs: ["Eng", "Tkm"],
@@ -166,7 +169,7 @@ export default {
     },
     showClearCompletedButton() {
       return this.todos.filter((todo) => todo.completed).length > 0;
-    }
+    },
   },
   directives: {
     focus: {
@@ -188,6 +191,8 @@ export default {
       });
       this.newTodo = "";
       this.idForTodo++;
+      calculator.executeCommand(new AddCommand(10));
+      console.log(calculator.value);
     },
     editTodo(todo) {
       this.beforeEditCache = todo.title;
@@ -221,7 +226,7 @@ export default {
       this.todos.splice(index, 1);
       this.show = false;
       document.querySelector("body").classList.remove("overflow-hidden");
-    }
+    },
   },
 };
 </script>
@@ -397,7 +402,6 @@ button:hover {
   overflow: auto; /* Enable scroll if needed */
   background-color: #474e5d;
   padding-top: 50px;
-  
 }
 
 /* Modal Content/Box */
@@ -406,11 +410,10 @@ button:hover {
   margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
   border: 1px solid #888;
   width: 50%; /* Could be more or less, depending on screen size */
-      -webkit-animation-name: animatetop;
+  -webkit-animation-name: animatetop;
   -webkit-animation-duration: 0.4s;
   animation-name: animatetop;
-  animation-duration: 0.4s
-
+  animation-duration: 0.4s;
 }
 
 /* Style the horizontal ruler */
@@ -444,13 +447,24 @@ hr {
 
 /* Add Animation */
 @-webkit-keyframes animatetop {
-  from {top:-300px; opacity:0} 
-  to {top:0; opacity:1}
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
 }
 
 @keyframes animatetop {
-  from {top:-300px; opacity:0}
-  to {top:0; opacity:1}
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
 }
-
 </style>
