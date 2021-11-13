@@ -119,7 +119,7 @@
 
 
 <script>
-import Before from "../assets/before.js";
+import {Calculator} from "../assets/before.js";
 
 export default {
   name: "todo-list",
