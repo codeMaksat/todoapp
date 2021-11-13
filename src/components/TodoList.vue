@@ -191,8 +191,10 @@ export default {
       });
       this.newTodo = "";
       this.idForTodo++;
-      calculator.executeCommand(new AddCommand(10));
-      console.log(calculator.value);
+      this.$MyNameClass.getFullName();
+      
+      // calculator.executeCommand(new AddCommand(10));
+      // console.log(calculator.value);
     },
     editTodo(todo) {
       this.beforeEditCache = todo.title;
