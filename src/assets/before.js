@@ -1,4 +1,4 @@
-export default class Calculator {
+class Calculator {
     constructor() {
         this.value = 0
         this.history = []
@@ -77,3 +77,5 @@ const calculator = new Calculator()
 // console.log(calculator.value);
 // calculator.undo()
 // console.log(calculator.value);
+
+export {Calculator, AddCommand, SubtractCommand, MultiplyCommand, DivideCommand};
