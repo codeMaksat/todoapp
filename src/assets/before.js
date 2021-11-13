@@ -70,7 +70,7 @@ class DivideCommand {
     }
 }
 
-const calculator = new Calculator()
+// const calculator = new Calculator()
 
 // calculator.executeCommand(new AddCommand(10))
 // calculator.executeCommand(new MultiplyCommand(2))
@@ -78,4 +78,4 @@ const calculator = new Calculator()
 // calculator.undo()
 // console.log(calculator.value);
 
-export {Calculator, AddCommand, SubtractCommand, MultiplyCommand, DivideCommand};
+export { Calculator, AddCommand, SubtractCommand, MultiplyCommand, DivideCommand };

@@ -119,13 +119,10 @@
 
 
 <script>
-import {Calculator} from "../assets/before.js";
+import {Calculator, AddCommand, SubtractCommand, MultiplyCommand, DivideCommand} from "../assets/before.js";
 
 export default {
   name: "todo-list",
-  components: {
-    Before
-  },
   data() {
     return {
       newTodo: "",
@@ -191,10 +188,12 @@ export default {
       });
       this.newTodo = "";
       this.idForTodo++;
-      this.$MyNameClass.getFullName();
-      
-      // calculator.executeCommand(new AddCommand(10));
-      // console.log(calculator.value);
+      const calculator = new Calculator()
+      calculator.executeCommand(new AddCommand(10));
+      calculator.executeCommand(new SubtractCommand(5));
+      console.log(calculator.value);
+      calculator.undo()
+      console.log(calculator.value);
     },
     editTodo(todo) {
       this.beforeEditCache = todo.title;
