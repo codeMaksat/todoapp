@@ -119,8 +119,7 @@
 
 
 <script>
-import {Calculator, AddCommand, SubtractCommand, MultiplyCommand, DivideCommand} from "../assets/before.js";
-const calculator = new Calculator()
+
 export default {
   name: "todo-list",
   data() {
@@ -190,14 +189,6 @@ export default {
       
       this.newTodo = "";
       this.idForTodo++;
-      
-      calculator.executeCommand(new AddCommand(10));
-      calculator.executeCommand(new SubtractCommand(5));
-      console.log(calculator.value);
-      calculator.undo()
-      console.log(calculator.value);
-      calculator.undo()
-      console.log(calculator.value);
     },
     editTodo(todo) {
       this.beforeEditCache = todo.title;
