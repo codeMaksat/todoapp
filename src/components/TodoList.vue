@@ -121,7 +121,7 @@
 
 
 <script>
-import { Calculator } from "../assets/before.js";
+
 
 export default {
   name: "todo-list",
@@ -187,15 +187,16 @@ export default {
       if (this.newTodo.trim().length == 0) {
         return;
       }
+
       this.todos.push({
         id: this.idForTodo,
         title: this.newTodo,
         completed: false,
         editing: false,
       });
+      
       this.newTodo = "";
       this.idForTodo++;
-      //calculator.executeCommand(new AddCommand(10));
     },
     editTodo(todo) {
       this.beforeEditCache = todo.title;
