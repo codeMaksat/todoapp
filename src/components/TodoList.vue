@@ -120,7 +120,7 @@
 
 <script>
 import {Calculator, AddCommand, SubtractCommand, MultiplyCommand, DivideCommand} from "../assets/before.js";
-
+const calculator = new Calculator()
 export default {
   name: "todo-list",
   data() {
@@ -180,17 +180,21 @@ export default {
       if (this.newTodo.trim().length == 0) {
         return;
       }
+
       this.todos.push({
         id: this.idForTodo,
         title: this.newTodo,
         completed: false,
         editing: false,
       });
+      
       this.newTodo = "";
       this.idForTodo++;
-      const calculator = new Calculator()
+      
       calculator.executeCommand(new AddCommand(10));
       calculator.executeCommand(new SubtractCommand(5));
+      console.log(calculator.value);
+      calculator.undo()
       console.log(calculator.value);
       calculator.undo()
       console.log(calculator.value);
