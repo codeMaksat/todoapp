@@ -112,6 +112,8 @@
         </transition>
       </div>
     </div>
+    <button v-if="isUndo" @click="backToPrevious">Undo</button>
+    <button v-else @click="backToPrevious">Redo</button>
   </div>
 
 </template>
@@ -119,13 +121,10 @@
 
 
 <script>
-import {Calculator} from "../assets/before.js";
+import { Calculator } from "../assets/before.js";
 
 export default {
   name: "todo-list",
-  components: {
-    Before
-  },
   data() {
     return {
       newTodo: "",
@@ -148,6 +147,8 @@ export default {
         },
       ],
       langs: ["Eng", "Tkm"],
+      previousState:{todos:[]},
+      isUndo:true
     };
   },
   computed: {
@@ -170,6 +171,9 @@ export default {
     showClearCompletedButton() {
       return this.todos.filter((todo) => todo.completed).length > 0;
     },
+    clonedTodos(){
+      return JSON.stringify(this.todos)
+    }
   },
   directives: {
     focus: {
@@ -191,8 +195,7 @@ export default {
       });
       this.newTodo = "";
       this.idForTodo++;
-      calculator.executeCommand(new AddCommand(10));
-      console.log(calculator.value);
+      //calculator.executeCommand(new AddCommand(10));
     },
     editTodo(todo) {
       this.beforeEditCache = todo.title;
@@ -227,7 +230,25 @@ export default {
       this.show = false;
       document.querySelector("body").classList.remove("overflow-hidden");
     },
+    backToPrevious(){
+      if(JSON.stringify(this.todos) !== JSON.stringify(this.previousState.todos)){
+        this.isUndo = !this.isUndo;
+      }
+      this.todos = [...this.previousState.todos];
+    }
   },
+  watch:{
+    clonedTodos:{
+      handler(after,before){
+      //this.previousState.todos = [...newValue]
+      this.previousState.todos = [...JSON.parse(before)];
+    },
+    deep:true
+    }
+  },
+  created(){
+    this.previousState.todos = [...this.todos];
+  }
 };
 </script>
 

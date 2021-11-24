@@ -1,6 +1,6 @@
 class Calculator {
-    constructor() {
-        this.value = 0
+    constructor(val,his) {
+        this.value = val;
         this.history = []
     }
 
@@ -74,8 +74,8 @@ const calculator = new Calculator()
 
 // calculator.executeCommand(new AddCommand(10))
 // calculator.executeCommand(new MultiplyCommand(2))
-// console.log(calculator.value);
+// (calculator.value);
 // calculator.undo()
-// console.log(calculator.value);
+// (calculator.value);
 
 export {Calculator, AddCommand, SubtractCommand, MultiplyCommand, DivideCommand};
