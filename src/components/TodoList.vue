@@ -111,18 +111,15 @@
           </button>
         </transition>
       </div>
+      <button class="cleartodo" v-if="isUndo" @click="backToPrevious">Undo</button>
+      <button class="cleartodo" v-else @click="backToPrevious">Redo</button>
     </div>
-    <button v-if="isUndo" @click="backToPrevious">Undo</button>
-    <button v-else @click="backToPrevious">Redo</button>
   </div>
-
 </template>
 
 
 
 <script>
-
-
 export default {
   name: "todo-list",
   data() {
@@ -147,8 +144,8 @@ export default {
         },
       ],
       langs: ["Eng", "Tkm"],
-      previousState:{todos:[]},
-      isUndo:true
+      previousState: { todos: [] },
+      isUndo: true,
     };
   },
   computed: {
@@ -171,9 +168,9 @@ export default {
     showClearCompletedButton() {
       return this.todos.filter((todo) => todo.completed).length > 0;
     },
-    clonedTodos(){
-      return JSON.stringify(this.todos)
-    }
+    clonedTodos() {
+      return JSON.stringify(this.todos);
+    },
   },
   directives: {
     focus: {
@@ -194,7 +191,7 @@ export default {
         completed: false,
         editing: false,
       });
-      
+
       this.newTodo = "";
       this.idForTodo++;
     },
@@ -231,25 +228,27 @@ export default {
       this.show = false;
       document.querySelector("body").classList.remove("overflow-hidden");
     },
-    backToPrevious(){
-      if(JSON.stringify(this.todos) !== JSON.stringify(this.previousState.todos)){
+    backToPrevious() {
+      if (
+        JSON.stringify(this.todos) !== JSON.stringify(this.previousState.todos)
+      ) {
         this.isUndo = !this.isUndo;
       }
       this.todos = [...this.previousState.todos];
-    }
-  },
-  watch:{
-    clonedTodos:{
-      handler(after,before){
-      //this.previousState.todos = [...newValue]
-      this.previousState.todos = [...JSON.parse(before)];
     },
-    deep:true
-    }
   },
-  created(){
+  watch: {
+    clonedTodos: {
+      handler(after, before) {
+        //this.previousState.todos = [...newValue]
+        this.previousState.todos = [...JSON.parse(before)]; 
+      },
+      deep: true,
+    },
+  },
+  created() {
     this.previousState.todos = [...this.todos];
-  }
+  },
 };
 </script>
 
