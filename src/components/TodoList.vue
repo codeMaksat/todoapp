@@ -50,9 +50,8 @@
         <transition name="fade">
           <!-- modal -->
           <div class="modal" v-if="show">
-            <div class="modal__backdrop" @click="closeModal()" />
 
-            <div id="id01" class="modal">
+            <div class="modal">
               <span class="close" title="Close Modal" @click="closeModal()"
                 >×</span
               >
@@ -253,6 +252,10 @@ export default {
 </script>
 
 <style>
+
+@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css");
+
+
 .todo-input {
   width: 100%;
   padding: 10px 41px;
@@ -465,6 +468,7 @@ hr {
   clear: both;
   display: table;
 }
+
 
 /* Add Animation */
 @-webkit-keyframes animatetop {
