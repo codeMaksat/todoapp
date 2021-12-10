@@ -99,7 +99,7 @@
       <div>{{ remaining }} {{ $t("todo.items") }}</div>
     </div>
 
-    <div class="extra-container">
+    <div class="extra-container" style="display: flex; justify-content: space-between;">
       <div>
         <transition name="fade">
           <button
@@ -109,11 +109,13 @@
           >
             {{ $t("todo.clear") }}
           </button>
+          
         </transition>
+<button class="cleartodo" v-if="isUndo" @click="backToPrevious">Undo</button>
+    <button class="cleartodo" v-else @click="backToPrevious">Redo</button>
       </div>
     </div>
-    <button v-if="isUndo" @click="backToPrevious">Undo</button>
-    <button v-else @click="backToPrevious">Redo</button>
+    
   </div>
 
 </template>
