@@ -50,9 +50,8 @@
         <transition name="fade">
           <!-- modal -->
           <div class="modal" v-if="show">
-            <div class="modal__backdrop" @click="closeModal()" />
 
-            <div id="id01" class="modal">
+            <div class="modal">
               <span class="close" title="Close Modal" @click="closeModal()"
                 >×</span
               >
@@ -99,7 +98,7 @@
       <div>{{ remaining }} {{ $t("todo.items") }}</div>
     </div>
 
-    <div class="extra-container" style="display: flex; justify-content: space-between;">
+    <div class="extra-container">
       <div>
         <transition name="fade">
           <button
@@ -109,22 +108,17 @@
           >
             {{ $t("todo.clear") }}
           </button>
-          
         </transition>
-<button class="cleartodo" v-if="isUndo" @click="backToPrevious">Undo</button>
-    <button class="cleartodo" v-else @click="backToPrevious">Redo</button>
       </div>
+      <button class="cleartodo" v-if="isUndo" @click="backToPrevious">Undo</button>
+      <button class="cleartodo" v-else @click="backToPrevious">Redo</button>
     </div>
-    
   </div>
-
 </template>
 
 
 
 <script>
-
-
 export default {
   name: "todo-list",
   data() {
@@ -149,8 +143,8 @@ export default {
         },
       ],
       langs: ["Eng", "Tkm"],
-      previousState:{todos:[]},
-      isUndo:true
+      previousState: { todos: [] },
+      isUndo: true,
     };
   },
   computed: {
@@ -173,9 +167,9 @@ export default {
     showClearCompletedButton() {
       return this.todos.filter((todo) => todo.completed).length > 0;
     },
-    clonedTodos(){
-      return JSON.stringify(this.todos)
-    }
+    clonedTodos() {
+      return JSON.stringify(this.todos);
+    },
   },
   directives: {
     focus: {
@@ -189,14 +183,12 @@ export default {
       if (this.newTodo.trim().length == 0) {
         return;
       }
-
       this.todos.push({
         id: this.idForTodo,
         title: this.newTodo,
         completed: false,
         editing: false,
       });
-      
       this.newTodo = "";
       this.idForTodo++;
     },
@@ -233,29 +225,32 @@ export default {
       this.show = false;
       document.querySelector("body").classList.remove("overflow-hidden");
     },
-    backToPrevious(){
-      if(JSON.stringify(this.todos) !== JSON.stringify(this.previousState.todos)){
+    backToPrevious() {
+      if (
+        JSON.stringify(this.todos) !== JSON.stringify(this.previousState.todos)
+      ) {
         this.isUndo = !this.isUndo;
       }
       this.todos = [...this.previousState.todos];
-    }
-  },
-  watch:{
-    clonedTodos:{
-      handler(after,before){
-      //this.previousState.todos = [...newValue]
-      this.previousState.todos = [...JSON.parse(before)];
     },
-    deep:true
-    }
   },
-  created(){
+  watch: {
+    clonedTodos: {
+      handler(after, before) {
+        //this.previousState.todos = [...newValue]
+        this.previousState.todos = [...JSON.parse(before)]; 
+      },
+      deep: true,
+    },
+  },
+  created() {
     this.previousState.todos = [...this.todos];
-  }
+  },
 };
 </script>
 
 <style>
+@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css");
 .todo-input {
   width: 100%;
   padding: 10px 41px;
@@ -329,7 +324,6 @@ export default {
 .cleartodo:focus {
   outline: none;
 }
-
 /* .cleartodo:active {
   background: lightgreen;
 } */
@@ -341,12 +335,10 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-
 .checkallbtn {
   display: inline-block;
   margin-left: 19px;
 }
-
 .locale-changer {
   float: right;
   margin-top: -95px;
@@ -369,7 +361,6 @@ select {
 select::-ms-expand {
   display: none;
 }
-
 /* Float cancel and delete buttons and add an equal width */
 .cancelbtn,
 .deletebtn {
@@ -383,38 +374,31 @@ select::-ms-expand {
   cursor: pointer;
   opacity: 0.8;
 }
-
 button:hover {
   opacity: 1;
 }
-
 /* Add a color to the cancel button */
 .cancelbtn {
   background-color: #ccc;
   color: black;
   font-size: 1rem;
 }
-
 /* Add a color to the delete button */
 .deletebtn {
   background-color: #f44336;
   font-size: 1rem;
 }
-
 /* Add padding and center-align text to the container */
 .container {
   padding: 16px;
   text-align: center;
 }
-
 .container h1 {
   font-size: 22px;
 }
-
 .container p {
   font-size: 1.2rem;
 }
-
 /* The Modal (background) */
 .modal {
   position: fixed; /* Stay in place */
@@ -427,7 +411,6 @@ button:hover {
   background-color: #474e5d;
   padding-top: 50px;
 }
-
 /* Modal Content/Box */
 .modal-content {
   background-color: #fefefe;
@@ -439,13 +422,11 @@ button:hover {
   animation-name: animatetop;
   animation-duration: 0.4s;
 }
-
 /* Style the horizontal ruler */
 hr {
   border: 1px solid #f1f1f1;
   margin-bottom: 25px;
 }
-
 /* The Modal Close Button (x) */
 .close {
   position: absolute;
@@ -455,20 +436,17 @@ hr {
   font-weight: bold;
   color: #f1f1f1;
 }
-
 .close:hover,
 .close:focus {
   color: #f44336;
   cursor: pointer;
 }
-
 /* Clear floats */
 .clearfix::after {
   content: "";
   clear: both;
   display: table;
 }
-
 /* Add Animation */
 @-webkit-keyframes animatetop {
   from {
@@ -480,7 +458,6 @@ hr {
     opacity: 1;
   }
 }
-
 @keyframes animatetop {
   from {
     top: -300px;
