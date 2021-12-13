@@ -20,12 +20,12 @@
       enter-active-class="animated fadeInUp"
       leave-active-class="animated fadeOutDown"
     >
-      <div
+      <todo-item
         v-for="(todo, index) in todosFiltered"
         :key="todo.id"
-        class="todo-item"
+        :todo="todo" :index="index"
       >
-        <div class="todo-item-left">
+        <!-- <div class="todo-item-left">
           <input type="checkbox" v-model="todo.completed" />
           <div
             v-if="!todo.editing"
@@ -46,42 +46,43 @@
             v-focus
           />
         </div>
-        <div class="remove-item" @click="openModal()">&times;</div>
-        <transition name="fade">
-          <!-- modal -->
-          <div class="modal" v-if="show">
+        <div class="remove-item" @click="openModal()">&times;</div>  -->
 
-            <div class="modal">
-              <span class="close" title="Close Modal" @click="closeModal()"
-                >×</span
-              >
-              <form class="modal-content">
-                <div class="container">
-                  <h1>{{ $t("model.head") }}</h1>
-                  <p>{{ $t("model.sure") }}?</p>
+            <!-- <transition name="fade">
+         
+            <div class="modal" v-if="show">
 
-                  <div class="clearfix">
-                    <button
-                      type="button"
-                      class="cancelbtn"
-                      @click="closeModal()"
-                    >
-                      {{ $t("model.cancel") }}
-                    </button>
-                    <button
-                      type="button"
-                      class="deletebtn"
-                      @click="removeTodo(index)"
-                    >
-                      {{ $t("model.delete") }}
-                    </button>
-                  </div>
+                <div class="modal">
+                <span class="close" title="Close Modal" @click="closeModal()"
+                    >×</span
+                >
+                <form class="modal-content">
+                    <div class="container">
+                    <h1>{{ $t("model.head") }}</h1>
+                    <p>{{ $t("model.sure") }}?</p>
+
+                    <div class="clearfix">
+                        <button
+                        type="button"
+                        class="cancelbtn"
+                        @click="closeModal()"
+                        >
+                        {{ $t("model.cancel") }}
+                        </button>
+                        <button
+                        type="button"
+                        class="deletebtn"
+                        @click="removeTodo(index)"
+                        >
+                        {{ $t("model.delete") }}
+                        </button>
+                    </div>
+                    </div>
+                </form>
                 </div>
-              </form>
             </div>
-          </div>
-        </transition>
-      </div>
+            </transition> -->
+      </todo-item>
     </transition-group>
 
     <div class="extra-container">
@@ -119,8 +120,13 @@
 
 
 <script>
+import TodoItem from './TodoItem.vue'
+
 export default {
   name: "todo-list",
+  components: {
+TodoItem,
+  },
   data() {
     return {
       newTodo: "",
