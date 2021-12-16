@@ -23,7 +23,7 @@
       <todo-item
         v-for="(todo, index) in todosFiltered"
         :key="todo.id"
-        :todo="todo" :index="index"
+        :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"
       >
         <!-- <div class="todo-item-left">
           <input type="checkbox" v-model="todo.completed" />
@@ -137,13 +137,13 @@ TodoItem,
       todos: [
         {
           id: 1,
-          title: "Finish Vue Screencast",
+          title: "Finish Vue.js",
           completed: false,
           editing: false,
         },
         {
           id: 2,
-          title: "Take over world",
+          title: "Travel the world",
           completed: false,
           editing: false,
         },
@@ -217,6 +217,9 @@ TodoItem,
     },
     clearCompleted() {
       this.todos = this.todos.filter((todo) => !todo.completed);
+    },
+    finishedEdit(data){
+this.todos.splice(data.index, 1, data.todo)
     },
     closeModal() {
       this.show = false;
