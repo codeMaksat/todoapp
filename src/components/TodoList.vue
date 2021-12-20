@@ -23,65 +23,10 @@
       <todo-item
         v-for="(todo, index) in todosFiltered"
         :key="todo.id"
-        :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"
+        :todo="todo"
+        :index="index"
+        :checkAll="!anyRemaining"
       >
-        <!-- <div class="todo-item-left">
-          <input type="checkbox" v-model="todo.completed" />
-          <div
-            v-if="!todo.editing"
-            @dblclick="editTodo(todo)"
-            class="todo-item-label"
-            :class="{ completed: todo.completed }"
-          >
-            {{ todo.title }}
-          </div>
-          <input
-            v-else
-            class="todo-item-edit"
-            type="text"
-            v-model="todo.title"
-            @blur="doneEdit(todo)"
-            @keyup.enter="doneEdit(todo)"
-            @keyup.esc="cancelEdit(todo)"
-            v-focus
-          />
-        </div>
-        <div class="remove-item" @click="openModal()">&times;</div>  -->
-
-            <!-- <transition name="fade">
-         
-            <div class="modal" v-if="show">
-
-                <div class="modal">
-                <span class="close" title="Close Modal" @click="closeModal()"
-                    >×</span
-                >
-                <form class="modal-content">
-                    <div class="container">
-                    <h1>{{ $t("model.head") }}</h1>
-                    <p>{{ $t("model.sure") }}?</p>
-
-                    <div class="clearfix">
-                        <button
-                        type="button"
-                        class="cancelbtn"
-                        @click="closeModal()"
-                        >
-                        {{ $t("model.cancel") }}
-                        </button>
-                        <button
-                        type="button"
-                        class="deletebtn"
-                        @click="removeTodo(index)"
-                        >
-                        {{ $t("model.delete") }}
-                        </button>
-                    </div>
-                    </div>
-                </form>
-                </div>
-            </div>
-            </transition> -->
       </todo-item>
     </transition-group>
 
@@ -111,7 +56,9 @@
           </button>
         </transition>
       </div>
-      <button class="cleartodo" v-if="isUndo" @click="backToPrevious">Undo</button>
+      <button class="cleartodo" v-if="isUndo" @click="backToPrevious">
+        Undo
+      </button>
       <button class="cleartodo" v-else @click="backToPrevious">Redo</button>
     </div>
   </div>
@@ -120,12 +67,12 @@
 
 
 <script>
-import TodoItem from './TodoItem.vue'
+import TodoItem from "./TodoItem.vue";
 
 export default {
   name: "todo-list",
   components: {
-TodoItem,
+    TodoItem,
   },
   data() {
     return {
@@ -153,6 +100,10 @@ TodoItem,
       isUndo: true,
     };
   },
+  created() {
+    eventBus.$on('removedTodo', (index) => this.removeTodo(index));
+    eventBus.$on('finishedEdit', (data) => this.finishedEdit(data));
+  },
   computed: {
     remaining() {
       return this.todos.filter((todo) => !todo.completed).length;
@@ -177,13 +128,6 @@ TodoItem,
       return JSON.stringify(this.todos);
     },
   },
-  directives: {
-    focus: {
-      inserted: function (el) {
-        el.focus();
-      },
-    },
-  },
   methods: {
     addTodo() {
       if (this.newTodo.trim().length == 0) {
@@ -198,19 +142,10 @@ TodoItem,
       this.newTodo = "";
       this.idForTodo++;
     },
-    editTodo(todo) {
-      this.beforeEditCache = todo.title;
-      todo.editing = true;
-    },
-    doneEdit(todo) {
-      if (todo.title.trim() == "") {
-        todo.title = this.beforeEditCache;
-      }
-      todo.editing = false;
-    },
-    cancelEdit(todo) {
-      todo.title = this.beforeEditCache;
-      todo.editing = false;
+    removeTodo(index) {
+      this.todos.splice(index, 1);
+      this.show = false;
+      document.querySelector("body").classList.remove("overflow-hidden");
     },
     checkAllTodos() {
       this.todos.forEach((todo) => (todo.completed = event.target.checked));
@@ -218,8 +153,8 @@ TodoItem,
     clearCompleted() {
       this.todos = this.todos.filter((todo) => !todo.completed);
     },
-    finishedEdit(data){
-this.todos.splice(data.index, 1, data.todo)
+    finishedEdit(data) {
+      this.todos.splice(data.index, 1, data.todo);
     },
     closeModal() {
       this.show = false;
@@ -229,11 +164,7 @@ this.todos.splice(data.index, 1, data.todo)
       this.show = true;
       document.querySelector("body").classList.add("overflow-hidden");
     },
-    removeTodo(index) {
-      this.todos.splice(index, 1);
-      this.show = false;
-      document.querySelector("body").classList.remove("overflow-hidden");
-    },
+
     backToPrevious() {
       if (
         JSON.stringify(this.todos) !== JSON.stringify(this.previousState.todos)
@@ -247,7 +178,7 @@ this.todos.splice(data.index, 1, data.todo)
     clonedTodos: {
       handler(after, before) {
         //this.previousState.todos = [...newValue]
-        this.previousState.todos = [...JSON.parse(before)]; 
+        this.previousState.todos = [...JSON.parse(before)];
       },
       deep: true,
     },
