@@ -46,9 +46,9 @@
             v-focus
           />
         </div>
-        <div class="remove-item" @click="openModal()">&times;</div>
+        <div class="remove-item" @click="removeTodo(index)">&times;</div>
+          <!-- modal wagtlayyn ayyrdym meselesi bar index gora pozanok-->
         <transition name="fade">
-          <!-- modal -->
           <div class="modal" v-if="show">
 
             <div class="modal">
@@ -100,6 +100,11 @@
 
     <div class="extra-container">
       <div>
+        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">All</button>
+        <button :class="{ active: filter == 'active' }" @click="filter = 'active'">Active</button>
+        <button :class="{ active: filter == 'completed' }" @click="filter = 'completed'">Completed</button>
+      </div>
+      <div>
         <transition name="fade">
           <button
             :disabled="!showClearCompletedButton"
@@ -113,6 +118,8 @@
       <button class="cleartodo" v-if="isUndo" @click="backToPrevious">Undo</button>
       <button class="cleartodo" v-else @click="backToPrevious">Redo</button>
     </div>
+
+    
   </div>
 </template>
 
@@ -468,4 +475,8 @@ hr {
     opacity: 1;
   }
 }
+
+.active {
+    background: lightgreen;
+  }
 </style>
