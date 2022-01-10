@@ -11,7 +11,7 @@
     <input
       type="text"
       class="todo-input"
-      :placeholder="$t('todo.title')"
+      :placeholder="$t('todo.placeholder')"
       v-model="newTodo"
       @keyup.enter="addTodo"
     />
@@ -20,12 +20,11 @@
       enter-active-class="animated fadeInUp"
       leave-active-class="animated fadeOutDown"
     >
-      <div
+      <todo-item
         v-for="(todo, index) in todosFiltered"
-        :key="todo.id"
-        class="todo-item"
+        :key="todo.id" :todo= 'todo' :index='index' 
       >
-        <div class="todo-item-left">
+        <!-- <div class="todo-item-left">
           <input type="checkbox" v-model="todo.completed" />
           <div
             v-if="!todo.editing"
@@ -46,11 +45,10 @@
             v-focus
           />
         </div>
-        <div class="remove-item" @click="removeTodo(index)">&times;</div>
-          <!-- modal wagtlayyn ayyrdym meselesi bar index gora pozanok-->
-        <transition name="fade">
+        <div class="remove-item" @click="removeTodo(index)">&times;</div> -->
+        <!-- modal wagtlayyn ayyrdym meselesi bar index gora pozanok-->
+        <!-- <transition name="fade">
           <div class="modal" v-if="show">
-
             <div class="modal">
               <span class="close" title="Close Modal" @click="closeModal()"
                 >×</span
@@ -80,8 +78,8 @@
               </form>
             </div>
           </div>
-        </transition>
-      </div>
+        </transition> -->
+      </todo-item>
     </transition-group>
 
     <div class="extra-container">
@@ -100,9 +98,21 @@
 
     <div class="extra-container">
       <div>
-        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">All</button>
-        <button :class="{ active: filter == 'active' }" @click="filter = 'active'">Active</button>
-        <button :class="{ active: filter == 'completed' }" @click="filter = 'completed'">Completed</button>
+        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">
+          All
+        </button>
+        <button
+          :class="{ active: filter == 'active' }"
+          @click="filter = 'active'"
+        >
+          Active
+        </button>
+        <button
+          :class="{ active: filter == 'completed' }"
+          @click="filter = 'completed'"
+        >
+          Completed
+        </button>
       </div>
       <div>
         <transition name="fade">
@@ -115,19 +125,24 @@
           </button>
         </transition>
       </div>
-      <button class="cleartodo" v-if="isUndo" @click="backToPrevious">Undo</button>
+      <button class="cleartodo" v-if="isUndo" @click="backToPrevious">
+        Undo
+      </button>
       <button class="cleartodo" v-else @click="backToPrevious">Redo</button>
     </div>
-
-    
   </div>
 </template>
 
 
 
 <script>
+import TodoItem from "./TodoItem.vue";
+
 export default {
   name: "todo-list",
+  components: {
+    TodoItem,
+  },
   data() {
     return {
       newTodo: "",
@@ -245,7 +260,7 @@ export default {
     clonedTodos: {
       handler(after, before) {
         //this.previousState.todos = [...newValue]
-        this.previousState.todos = [...JSON.parse(before)]; 
+        this.previousState.todos = [...JSON.parse(before)];
       },
       deep: true,
     },
@@ -477,6 +492,6 @@ hr {
 }
 
 .active {
-    background: lightgreen;
-  }
+  background: lightgreen;
+}
 </style>
