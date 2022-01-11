@@ -21,7 +21,7 @@
         v-focus
       />
     </div>
-    <div class="remove-item" @click="removeTodo(todo.id)">&times;</div>
+    <div class="remove-item" @click="removeTodo(index)">&times;</div>
   </div>
 </template>
 
@@ -40,11 +40,11 @@ export default {
   },
   data() {
     return {
-      id: this.todo.id,
-      title: this.todo.title,
-      completed: this.todo.completed,
-      editing: this.todo.editing,
-      beforeEditCache: "",
+      'id': this.todo.id,
+      'title': this.todo.title,
+      'completed': this.todo.completed,
+      'editing': this.todo.editing,
+      'beforeEditCache': "",
     };
   },
   watch: {
@@ -78,10 +78,13 @@ export default {
       }
       this.editing = false;
       this.$emit("finishedEdit", {
-        id: this.id,
-        title: this.title,
-        completed: this.completed,
-        editing: this.editing,
+        index: this.index,
+       'todo': {
+         'id': this.id,
+         'title': this.title,
+         'completed': this.completed,
+         'editing': this.editing,
+       }
       });
     },
     cancelEdit() {

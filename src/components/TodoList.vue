@@ -22,7 +22,11 @@
     >
       <todo-item
         v-for="(todo, index) in todosFiltered"
-        :key="todo.id" :todo= 'todo' :index='index' @removedTodo='removeTodo'
+        :key="todo.id"
+        :todo="todo"
+        :index="index"
+        @removedTodo="removeTodo"
+        @finishedEdit="finishedEdit"
       >
         <!-- <div class="todo-item-left">
           <input type="checkbox" v-model="todo.completed" />
@@ -193,7 +197,7 @@ export default {
       return JSON.stringify(this.todos);
     },
   },
- 
+
   methods: {
     addTodo() {
       if (this.newTodo.trim().length == 0) {
@@ -207,6 +211,11 @@ export default {
       });
       this.newTodo = "";
       this.idForTodo++;
+    },
+    removeTodo(index) {
+      this.todos.splice(index, 1);
+      // this.show = false;
+      // document.querySelector("body").classList.remove("overflow-hidden");
     },
     editTodo(todo) {
       this.beforeEditCache = todo.title;
@@ -236,10 +245,8 @@ export default {
     //   this.show = true;
     //   document.querySelector("body").classList.add("overflow-hidden");
     // },
-    removeTodo(index) {
-      this.todos.splice(index, 1);
-      // this.show = false;
-      // document.querySelector("body").classList.remove("overflow-hidden");
+    finishedEdit(data) {
+      this.todos.splice(data.index, 1, data.todo)
     },
     backToPrevious() {
       if (
