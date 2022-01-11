@@ -65,8 +65,8 @@ export default {
     },
   },
   methods: {
-    removeTodo(id) {
-      this.$emit("removedTodo", id);
+    removeTodo(index) {
+      this.$emit("removedTodo", index);
     },
     editTodo() {
       this.beforeEditCache = this.title;

@@ -22,7 +22,7 @@
     >
       <todo-item
         v-for="(todo, index) in todosFiltered"
-        :key="todo.id" :todo= 'todo' :index='index' 
+        :key="todo.id" :todo= 'todo' :index='index' @removedTodo='removeTodo'
       >
         <!-- <div class="todo-item-left">
           <input type="checkbox" v-model="todo.completed" />
@@ -193,13 +193,7 @@ export default {
       return JSON.stringify(this.todos);
     },
   },
-  directives: {
-    focus: {
-      inserted: function (el) {
-        el.focus();
-      },
-    },
-  },
+ 
   methods: {
     addTodo() {
       if (this.newTodo.trim().length == 0) {
@@ -234,18 +228,18 @@ export default {
     clearCompleted() {
       this.todos = this.todos.filter((todo) => !todo.completed);
     },
-    closeModal() {
-      this.show = false;
-      document.querySelector("body").classList.remove("overflow-hidden");
-    },
-    openModal() {
-      this.show = true;
-      document.querySelector("body").classList.add("overflow-hidden");
-    },
+    // closeModal() {
+    //   this.show = false;
+    //   document.querySelector("body").classList.remove("overflow-hidden");
+    // },
+    // openModal() {
+    //   this.show = true;
+    //   document.querySelector("body").classList.add("overflow-hidden");
+    // },
     removeTodo(index) {
       this.todos.splice(index, 1);
-      this.show = false;
-      document.querySelector("body").classList.remove("overflow-hidden");
+      // this.show = false;
+      // document.querySelector("body").classList.remove("overflow-hidden");
     },
     backToPrevious() {
       if (
