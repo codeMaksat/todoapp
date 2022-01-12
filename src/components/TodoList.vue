@@ -21,12 +21,7 @@
       leave-active-class="animated fadeOutDown"
     >
       <todo-item
-        v-for="(todo, index) in todosFiltered"
-        :key="todo.id"
-        :todo="todo"
-        :index="index"
-        @removedTodo="removeTodo"
-        @finishedEdit="finishedEdit"
+        v-for="todo in todosFiltered" :key="todo.id" :todo="todo" :checkAll="!anyRemaining" @removedTodo="removeTodo" @finishedEdit="finishedEdit"
       >
         <!-- <div class="todo-item-left">
           <input type="checkbox" v-model="todo.completed" />
@@ -157,13 +152,13 @@ export default {
       todos: [
         {
           id: 1,
-          title: "Finish Vue Screencast",
+          title: "Finish Vue Tutorials",
           completed: false,
           editing: false,
         },
         {
           id: 2,
-          title: "Take over world",
+          title: "Read a book",
           completed: false,
           editing: false,
         },
@@ -212,24 +207,9 @@ export default {
       this.newTodo = "";
       this.idForTodo++;
     },
-    removeTodo(index) {
-      this.todos.splice(index, 1);
-      // this.show = false;
-      // document.querySelector("body").classList.remove("overflow-hidden");
-    },
-    editTodo(todo) {
-      this.beforeEditCache = todo.title;
-      todo.editing = true;
-    },
-    doneEdit(todo) {
-      if (todo.title.trim() == "") {
-        todo.title = this.beforeEditCache;
-      }
-      todo.editing = false;
-    },
-    cancelEdit(todo) {
-      todo.title = this.beforeEditCache;
-      todo.editing = false;
+    removeTodo(id) {
+      const index = this.todos.findIndex((item) => item.id == id)
+      this.todos.splice(index, 1)
     },
     checkAllTodos() {
       this.todos.forEach((todo) => (todo.completed = event.target.checked));
@@ -246,7 +226,8 @@ export default {
     //   document.querySelector("body").classList.add("overflow-hidden");
     // },
     finishedEdit(data) {
-      this.todos.splice(data.index, 1, data.todo)
+      const index = this.todos.findIndex((item) => item.id == data.id)
+      this.todos.splice(index, 1, data)
     },
     backToPrevious() {
       if (
