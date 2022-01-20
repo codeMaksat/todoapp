@@ -136,6 +136,7 @@
 
 <script>
 import TodoItem from "./TodoItem.vue";
+import db from './firebaseInit'
 
 export default {
   name: "todo-list",
@@ -150,23 +151,38 @@ export default {
       filter: "all",
       show: false,
       todos: [
-        {
-          id: 1,
-          title: "Finish Vue Tutorials",
-          completed: false,
-          editing: false,
-        },
-        {
-          id: 2,
-          title: "Read a book",
-          completed: false,
-          editing: false,
-        },
+        // {
+        //   id: 1,
+        //   title: "Finish Vue Tutorials",
+        //   completed: false,
+        //   editing: false,
+        // },
+        // {
+        //   id: 2,
+        //   title: "Read a book",
+        //   completed: false,
+        //   editing: false,
+        // },
       ],
       langs: ["Eng", "Tkm"],
       previousState: { todos: [] },
       isUndo: true,
     };
+  },
+  created () {
+db.collection('todos').get().then(querySnapshot => {
+  querySnapshot.forEach(doc => {
+    const data = {
+      'firebaseId': doc.id,
+      'id': doc.data().id,
+      'title': doc.data().title,
+      'completed': doc.data().completed,
+      'editing': doc.data().editing,
+    }
+
+    this.todos.push(data)
+  })
+})
   },
   computed: {
     remaining() {
