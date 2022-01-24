@@ -21,7 +21,12 @@
       leave-active-class="animated fadeOutDown"
     >
       <todo-item
-        v-for="todo in todosFiltered" :key="todo.id" :todo="todo" :checkAll="!anyRemaining" @removedTodo="removeTodo" @finishedEdit="finishedEdit"
+        v-for="(todo, index) in todosFiltered"
+        :key="todo.id"
+        :todo="todo"
+        :index="index"
+        @removedTodo="removeTodo"
+        @finishedEdit="finishedEdit"
       >
         <!-- <div class="todo-item-left">
           <input type="checkbox" v-model="todo.completed" />
@@ -151,6 +156,7 @@ export default {
       filter: "all",
       show: false,
       todos: [
+<<<<<<< HEAD
         // {
         //   id: 1,
         //   title: "Finish Vue Tutorials",
@@ -163,6 +169,20 @@ export default {
         //   completed: false,
         //   editing: false,
         // },
+=======
+        {
+          id: 1,
+          title: "Finish Vue Screencast",
+          completed: false,
+          editing: false,
+        },
+        {
+          id: 2,
+          title: "Take over world",
+          completed: false,
+          editing: false,
+        },
+>>>>>>> parent of 25ae925... End of the second lesson, everything works well
       ],
       langs: ["Eng", "Tkm"],
       previousState: { todos: [] },
@@ -223,9 +243,24 @@ db.collection('todos').get().then(querySnapshot => {
       this.newTodo = "";
       this.idForTodo++;
     },
-    removeTodo(id) {
-      const index = this.todos.findIndex((item) => item.id == id)
-      this.todos.splice(index, 1)
+    removeTodo(index) {
+      this.todos.splice(index, 1);
+      // this.show = false;
+      // document.querySelector("body").classList.remove("overflow-hidden");
+    },
+    editTodo(todo) {
+      this.beforeEditCache = todo.title;
+      todo.editing = true;
+    },
+    doneEdit(todo) {
+      if (todo.title.trim() == "") {
+        todo.title = this.beforeEditCache;
+      }
+      todo.editing = false;
+    },
+    cancelEdit(todo) {
+      todo.title = this.beforeEditCache;
+      todo.editing = false;
     },
     checkAllTodos() {
       this.todos.forEach((todo) => (todo.completed = event.target.checked));
@@ -242,8 +277,7 @@ db.collection('todos').get().then(querySnapshot => {
     //   document.querySelector("body").classList.add("overflow-hidden");
     // },
     finishedEdit(data) {
-      const index = this.todos.findIndex((item) => item.id == data.id)
-      this.todos.splice(index, 1, data)
+      this.todos.splice(data.index, 1, data.todo)
     },
     backToPrevious() {
       if (
