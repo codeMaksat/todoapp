@@ -208,6 +208,7 @@ db.collection('todos').get().then(querySnapshot => {
       return JSON.stringify(this.todos);
     },
   },
+
   methods: {
     addTodo() {
       if (this.newTodo.trim().length == 0) {
