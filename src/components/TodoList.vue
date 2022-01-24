@@ -11,7 +11,7 @@
     <input
       type="text"
       class="todo-input"
-      :placeholder="$t('todo.title')"
+      :placeholder="$t('todo.placeholder')"
       v-model="newTodo"
       @keyup.enter="addTodo"
     />
@@ -21,12 +21,63 @@
       leave-active-class="animated fadeOutDown"
     >
       <todo-item
-        v-for="(todo, index) in todosFiltered"
-        :key="todo.id"
-        :todo="todo"
-        :index="index"
-        :checkAll="!anyRemaining"
+        v-for="todo in todosFiltered" :key="todo.id" :todo="todo" :checkAll="!anyRemaining" @removedTodo="removeTodo" @finishedEdit="finishedEdit"
       >
+        <!-- <div class="todo-item-left">
+          <input type="checkbox" v-model="todo.completed" />
+          <div
+            v-if="!todo.editing"
+            @dblclick="editTodo(todo)"
+            class="todo-item-label"
+            :class="{ completed: todo.completed }"
+          >
+            {{ todo.title }}
+          </div>
+          <input
+            v-else
+            class="todo-item-edit"
+            type="text"
+            v-model="todo.title"
+            @blur="doneEdit(todo)"
+            @keyup.enter="doneEdit(todo)"
+            @keyup.esc="cancelEdit(todo)"
+            v-focus
+          />
+        </div>
+        <div class="remove-item" @click="removeTodo(index)">&times;</div> -->
+        <!-- modal wagtlayyn ayyrdym meselesi bar index gora pozanok-->
+        <!-- <transition name="fade">
+          <div class="modal" v-if="show">
+            <div class="modal">
+              <span class="close" title="Close Modal" @click="closeModal()"
+                >×</span
+              >
+              <form class="modal-content">
+                <div class="container">
+                  <h1>{{ $t("model.head") }}</h1>
+                  <p>{{ $t("model.sure") }}?</p>
+
+                  <div class="clearfix">
+                    <button
+                      type="button"
+                      class="cancelbtn"
+                      @click="closeModal()"
+                    >
+                      {{ $t("model.cancel") }}
+                    </button>
+                    <button
+                      type="button"
+                      class="deletebtn"
+                      @click="removeTodo(index)"
+                    >
+                      {{ $t("model.delete") }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </transition> -->
       </todo-item>
     </transition-group>
 
@@ -45,6 +96,23 @@
     </div>
 
     <div class="extra-container">
+      <div>
+        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">
+          All
+        </button>
+        <button
+          :class="{ active: filter == 'active' }"
+          @click="filter = 'active'"
+        >
+          Active
+        </button>
+        <button
+          :class="{ active: filter == 'completed' }"
+          @click="filter = 'completed'"
+        >
+          Completed
+        </button>
+      </div>
       <div>
         <transition name="fade">
           <button
@@ -68,6 +136,7 @@
 
 <script>
 import TodoItem from "./TodoItem.vue";
+import db from './firebaseInit'
 
 export default {
   name: "todo-list",
@@ -82,27 +151,38 @@ export default {
       filter: "all",
       show: false,
       todos: [
-        {
-          id: 1,
-          title: "Finish Vue.js",
-          completed: false,
-          editing: false,
-        },
-        {
-          id: 2,
-          title: "Travel the world",
-          completed: false,
-          editing: false,
-        },
+        // {
+        //   id: 1,
+        //   title: "Finish Vue Tutorials",
+        //   completed: false,
+        //   editing: false,
+        // },
+        // {
+        //   id: 2,
+        //   title: "Read a book",
+        //   completed: false,
+        //   editing: false,
+        // },
       ],
       langs: ["Eng", "Tkm"],
       previousState: { todos: [] },
       isUndo: true,
     };
   },
-  created() {
-    eventBus.$on('removedTodo', (index) => this.removeTodo(index));
-    eventBus.$on('finishedEdit', (data) => this.finishedEdit(data));
+  created () {
+db.collection('todos').get().then(querySnapshot => {
+  querySnapshot.forEach(doc => {
+    const data = {
+      'firebaseId': doc.id,
+      'id': doc.data().id,
+      'title': doc.data().title,
+      'completed': doc.data().completed,
+      'editing': doc.data().editing,
+    }
+
+    this.todos.push(data)
+  })
+})
   },
   computed: {
     remaining() {
@@ -142,10 +222,9 @@ export default {
       this.newTodo = "";
       this.idForTodo++;
     },
-    removeTodo(index) {
-      this.todos.splice(index, 1);
-      this.show = false;
-      document.querySelector("body").classList.remove("overflow-hidden");
+    removeTodo(id) {
+      const index = this.todos.findIndex((item) => item.id == id)
+      this.todos.splice(index, 1)
     },
     checkAllTodos() {
       this.todos.forEach((todo) => (todo.completed = event.target.checked));
@@ -153,18 +232,18 @@ export default {
     clearCompleted() {
       this.todos = this.todos.filter((todo) => !todo.completed);
     },
+    // closeModal() {
+    //   this.show = false;
+    //   document.querySelector("body").classList.remove("overflow-hidden");
+    // },
+    // openModal() {
+    //   this.show = true;
+    //   document.querySelector("body").classList.add("overflow-hidden");
+    // },
     finishedEdit(data) {
-      this.todos.splice(data.index, 1, data.todo);
+      const index = this.todos.findIndex((item) => item.id == data.id)
+      this.todos.splice(index, 1, data)
     },
-    closeModal() {
-      this.show = false;
-      document.querySelector("body").classList.remove("overflow-hidden");
-    },
-    openModal() {
-      this.show = true;
-      document.querySelector("body").classList.add("overflow-hidden");
-    },
-
     backToPrevious() {
       if (
         JSON.stringify(this.todos) !== JSON.stringify(this.previousState.todos)
@@ -407,5 +486,9 @@ hr {
     top: 0;
     opacity: 1;
   }
+}
+
+.active {
+  background: lightgreen;
 }
 </style>

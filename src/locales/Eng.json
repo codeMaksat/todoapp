@@ -1,7 +1,7 @@
 {
     "message": "hello i18n !!",
     "todo": {
-        "title": "What needs to be done",
+        "placeholder": "What needs to be done",
         "checkall": "Check All",
         "items": "items left",
         "clear": "Clear Completed",

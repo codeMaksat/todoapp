@@ -1,7 +1,7 @@
 {
     "message": "Salam i18n !!",
     "todo": {
-        "title": "Näme etsem goýsamyň bar?",
+        "placeholder": "Näme etsem goýsamyň bar?",
         "checkall": "Hemmesini belle",
         "items": "sany galdy",
         "clear": "Poz",
