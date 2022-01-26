@@ -49,10 +49,9 @@
             v-focus
           />
         </div>
-        <div class="remove-item" @click="removeTodo(index)">&times;</div> -->
-        <!-- modal wagtlayyn ayyrdym meselesi bar index gora pozanok-->
-        <!-- <transition name="fade">
-          <div class="modal" v-if="show">
+        <div class="remove-item" @click="openModal()">&times;</div>
+        <transition name="fade">
+          <!-- <div class="modal" v-if="show">
             <div class="modal">
               <span class="close" title="Close Modal" @click="closeModal()"
                 >×</span
@@ -82,7 +81,7 @@
               </form>
             </div>
           </div>
-        </transition> -->
+        </transition> --> 
       </todo-item>
     </transition-group>
 
@@ -101,23 +100,6 @@
     </div>
 
     <div class="extra-container">
-      <div>
-        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">
-          All
-        </button>
-        <button
-          :class="{ active: filter == 'active' }"
-          @click="filter = 'active'"
-        >
-          Active
-        </button>
-        <button
-          :class="{ active: filter == 'completed' }"
-          @click="filter = 'completed'"
-        >
-          Completed
-        </button>
-      </div>
       <div>
         <transition name="fade">
           <button
@@ -156,20 +138,6 @@ export default {
       filter: "all",
       show: false,
       todos: [
-<<<<<<< HEAD
-        // {
-        //   id: 1,
-        //   title: "Finish Vue Tutorials",
-        //   completed: false,
-        //   editing: false,
-        // },
-        // {
-        //   id: 2,
-        //   title: "Read a book",
-        //   completed: false,
-        //   editing: false,
-        // },
-=======
         {
           id: 1,
           title: "Finish Vue Screencast",
@@ -182,7 +150,6 @@ export default {
           completed: false,
           editing: false,
         },
->>>>>>> parent of 25ae925... End of the second lesson, everything works well
       ],
       langs: ["Eng", "Tkm"],
       previousState: { todos: [] },
@@ -521,9 +488,5 @@ hr {
     top: 0;
     opacity: 1;
   }
-}
-
-.active {
-  background: lightgreen;
 }
 </style>
