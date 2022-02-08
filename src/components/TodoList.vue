@@ -20,69 +20,16 @@
       enter-active-class="animated fadeInUp"
       leave-active-class="animated fadeOutDown"
     >
-      <todo-item
-        v-for="(todo, index) in todosFiltered"
-        :key="todo.id"
-        :todo="todo"
-        :index="index"
-        @removedTodo="removeTodo"
-        @finishedEdit="finishedEdit"
-      >
-        <!-- <div class="todo-item-left">
-          <input type="checkbox" v-model="todo.completed" />
-          <div
-            v-if="!todo.editing"
-            @dblclick="editTodo(todo)"
-            class="todo-item-label"
-            :class="{ completed: todo.completed }"
-          >
-            {{ todo.title }}
-          </div>
-          <input
-            v-else
-            class="todo-item-edit"
-            type="text"
-            v-model="todo.title"
-            @blur="doneEdit(todo)"
-            @keyup.enter="doneEdit(todo)"
-            @keyup.esc="cancelEdit(todo)"
-            v-focus
-          />
+    <div v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
+        <div class="todo-item-left">
+          <input type="checkbox" v-model="todo.completed">
+          <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
+          <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
         </div>
-        <div class="remove-item" @click="openModal()">&times;</div>
-        <transition name="fade">
-          <!-- <div class="modal" v-if="show">
-            <div class="modal">
-              <span class="close" title="Close Modal" @click="closeModal()"
-                >×</span
-              >
-              <form class="modal-content">
-                <div class="container">
-                  <h1>{{ $t("model.head") }}</h1>
-                  <p>{{ $t("model.sure") }}?</p>
-
-                  <div class="clearfix">
-                    <button
-                      type="button"
-                      class="cancelbtn"
-                      @click="closeModal()"
-                    >
-                      {{ $t("model.cancel") }}
-                    </button>
-                    <button
-                      type="button"
-                      class="deletebtn"
-                      @click="removeTodo(index)"
-                    >
-                      {{ $t("model.delete") }}
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </transition> --> 
-      </todo-item>
+        <div class="remove-item" @click="removeTodo(index)">
+        &times;
+      </div>
+    </div>
     </transition-group>
 
     <div class="extra-container">
@@ -100,6 +47,12 @@
     </div>
 
     <div class="extra-container">
+      <div>
+        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">All</button>
+        <button :class="{ active: filter == 'active' }" @click="filter = 'active'">Active</button>
+        <button :class="{ active: filter == 'completed' }" @click="filter = 'completed'">Completed</button>
+      </div>
+      
       <div>
         <transition name="fade">
           <button
@@ -122,14 +75,9 @@
 
 
 <script>
-import TodoItem from "./TodoItem.vue";
-import db from './firebaseInit'
 
 export default {
   name: "todo-list",
-  components: {
-    TodoItem,
-  },
   data() {
     return {
       newTodo: "",
@@ -140,13 +88,13 @@ export default {
       todos: [
         {
           id: 1,
-          title: "Finish Vue Screencast",
+          title: "Finish VueJs",
           completed: false,
           editing: false,
         },
         {
           id: 2,
-          title: "Take over world",
+          title: "Read a book",
           completed: false,
           editing: false,
         },
@@ -156,84 +104,89 @@ export default {
       isUndo: true,
     };
   },
-  created () {
-db.collection('todos').get().then(querySnapshot => {
-  querySnapshot.forEach(doc => {
-    const data = {
-      'firebaseId': doc.id,
-      'id': doc.data().id,
-      'title': doc.data().title,
-      'completed': doc.data().completed,
-      'editing': doc.data().editing,
-    }
+//   created () {
+// db.collection('todos').get().then(querySnapshot => {
+//   querySnapshot.forEach(doc => {
+//     const data = {
+//       'firebaseId': doc.id,
+//       'id': doc.data().id,
+//       'title': doc.data().title,
+//       'completed': doc.data().completed,
+//       'editing': doc.data().editing,
+//     }
 
-    this.todos.push(data)
-  })
-})
-  },
+//     this.todos.push(data)
+//   })
+// })
+//   },
   computed: {
-    remaining() {
-      return this.todos.filter((todo) => !todo.completed).length;
+   remaining() {
+      return this.todos.filter(todo => !todo.completed).length
     },
     anyRemaining() {
-      return this.remaining != 0;
+      return this.remaining != 0
     },
     todosFiltered() {
-      if (this.filter == "all") {
-        return this.todos;
-      } else if (this.filter == "active") {
-        return this.todos.filter((todo) => !todo.completed);
-      } else if (this.filter == "completed") {
-        return this.todos.filter((todo) => todo.completed);
+      if (this.filter == 'all') {
+        return this.todos
+      } else if (this.filter == 'active') {
+        return this.todos.filter(todo => !todo.completed)
+      } else if (this.filter == 'completed') {
+        return this.todos.filter(todo => todo.completed)
       }
-      return this.todos;
+      return this.todos
     },
     showClearCompletedButton() {
-      return this.todos.filter((todo) => todo.completed).length > 0;
+      return this.todos.filter(todo => todo.completed).length > 0
     },
     clonedTodos() {
       return JSON.stringify(this.todos);
     },
   },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus()
+      }
+    }
+  },
 
   methods: {
     addTodo() {
       if (this.newTodo.trim().length == 0) {
-        return;
+        return
       }
       this.todos.push({
         id: this.idForTodo,
         title: this.newTodo,
         completed: false,
         editing: false,
-      });
-      this.newTodo = "";
-      this.idForTodo++;
+      })
+      this.newTodo = ''
+      this.idForTodo++
     },
-    removeTodo(index) {
-      this.todos.splice(index, 1);
-      // this.show = false;
-      // document.querySelector("body").classList.remove("overflow-hidden");
+     removeTodo(index) {
+      this.todos.splice(index, 1)
     },
     editTodo(todo) {
-      this.beforeEditCache = todo.title;
-      todo.editing = true;
+      this.beforeEditCache = todo.title
+      todo.editing = true
     },
     doneEdit(todo) {
-      if (todo.title.trim() == "") {
-        todo.title = this.beforeEditCache;
+      if (todo.title.trim() == '') {
+        todo.title = this.beforeEditCache
       }
-      todo.editing = false;
+      todo.editing = false
     },
     cancelEdit(todo) {
-      todo.title = this.beforeEditCache;
-      todo.editing = false;
+      todo.title = this.beforeEditCache
+      todo.editing = false
     },
     checkAllTodos() {
-      this.todos.forEach((todo) => (todo.completed = event.target.checked));
+      this.todos.forEach((todo) => todo.completed = event.target.checked)
     },
-    clearCompleted() {
-      this.todos = this.todos.filter((todo) => !todo.completed);
+     clearCompleted() {
+      this.todos = this.todos.filter(todo => !todo.completed)
     },
     // closeModal() {
     //   this.show = false;
@@ -243,9 +196,6 @@ db.collection('todos').get().then(querySnapshot => {
     //   this.show = true;
     //   document.querySelector("body").classList.add("overflow-hidden");
     // },
-    finishedEdit(data) {
-      this.todos.splice(data.index, 1, data.todo)
-    },
     backToPrevious() {
       if (
         JSON.stringify(this.todos) !== JSON.stringify(this.previousState.todos)
@@ -489,4 +439,8 @@ hr {
     opacity: 1;
   }
 }
+
+ .active {
+    background: lightgreen;
+  }
 </style>
