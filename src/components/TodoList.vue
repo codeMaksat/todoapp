@@ -20,16 +20,34 @@
       enter-active-class="animated fadeInUp"
       leave-active-class="animated fadeOutDown"
     >
-    <div v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
+      <div
+        v-for="(todo, index) in todosFiltered"
+        :key="todo.id"
+        class="todo-item"
+      >
         <div class="todo-item-left">
-          <input type="checkbox" v-model="todo.completed">
-          <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
-          <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
+          <input type="checkbox" v-model="todo.completed" />
+          <div
+            v-if="!todo.editing"
+            @dblclick="editTodo(todo)"
+            class="todo-item-label"
+            :class="{ completed: todo.completed }"
+          >
+            {{ todo.title }}
+          </div>
+          <input
+            v-else
+            class="todo-item-edit"
+            type="text"
+            v-model="todo.title"
+            @blur="doneEdit(todo)"
+            @keyup.enter="doneEdit(todo)"
+            @keyup.esc="cancelEdit(todo)"
+            v-focus
+          />
         </div>
-        <div class="remove-item" @click="removeTodo(index)">
-        &times;
+        <div class="remove-item" @click="removeTodo(index)">&times;</div>
       </div>
-    </div>
     </transition-group>
 
     <div class="extra-container">
@@ -48,11 +66,23 @@
 
     <div class="extra-container">
       <div>
-        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">All</button>
-        <button :class="{ active: filter == 'active' }" @click="filter = 'active'">Active</button>
-        <button :class="{ active: filter == 'completed' }" @click="filter = 'completed'">Completed</button>
+        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">
+          All
+        </button>
+        <button
+          :class="{ active: filter == 'active' }"
+          @click="filter = 'active'"
+        >
+          Active
+        </button>
+        <button
+          :class="{ active: filter == 'completed' }"
+          @click="filter = 'completed'"
+        >
+          Completed
+        </button>
       </div>
-      
+
       <div>
         <transition name="fade">
           <button
@@ -75,6 +105,7 @@
 
 
 <script>
+import db from "./firebaseInit";
 
 export default {
   name: "todo-list",
@@ -85,59 +116,49 @@ export default {
       beforeEditCache: "",
       filter: "all",
       show: false,
-      todos: [
-        {
-          id: 1,
-          title: "Finish VueJs",
-          completed: false,
-          editing: false,
-        },
-        {
-          id: 2,
-          title: "Read a book",
-          completed: false,
-          editing: false,
-        },
-      ],
+      todos: [],
       langs: ["Eng", "Tkm"],
       previousState: { todos: [] },
       isUndo: true,
     };
   },
-//   created () {
-// db.collection('todos').get().then(querySnapshot => {
-//   querySnapshot.forEach(doc => {
-//     const data = {
-//       'firebaseId': doc.id,
-//       'id': doc.data().id,
-//       'title': doc.data().title,
-//       'completed': doc.data().completed,
-//       'editing': doc.data().editing,
-//     }
+  created() {
+    db.collection("todos")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log('here');
+          const data = {
+            firebaseId: doc.id,
+            id: doc.data().id,
+            title: doc.data().title,
+            completed: doc.data().completed,
+            editing: doc.data().editing,
+          };
 
-//     this.todos.push(data)
-//   })
-// })
-//   },
+          this.todos.push(data);
+        });
+      });
+  },
   computed: {
-   remaining() {
-      return this.todos.filter(todo => !todo.completed).length
+    remaining() {
+      return this.todos.filter((todo) => !todo.completed).length;
     },
     anyRemaining() {
-      return this.remaining != 0
+      return this.remaining != 0;
     },
     todosFiltered() {
-      if (this.filter == 'all') {
-        return this.todos
-      } else if (this.filter == 'active') {
-        return this.todos.filter(todo => !todo.completed)
-      } else if (this.filter == 'completed') {
-        return this.todos.filter(todo => todo.completed)
+      if (this.filter == "all") {
+        return this.todos;
+      } else if (this.filter == "active") {
+        return this.todos.filter((todo) => !todo.completed);
+      } else if (this.filter == "completed") {
+        return this.todos.filter((todo) => todo.completed);
       }
-      return this.todos
+      return this.todos;
     },
     showClearCompletedButton() {
-      return this.todos.filter(todo => todo.completed).length > 0
+      return this.todos.filter((todo) => todo.completed).length > 0;
     },
     clonedTodos() {
       return JSON.stringify(this.todos);
@@ -146,47 +167,47 @@ export default {
   directives: {
     focus: {
       inserted: function (el) {
-        el.focus()
-      }
-    }
+        el.focus();
+      },
+    },
   },
 
   methods: {
     addTodo() {
       if (this.newTodo.trim().length == 0) {
-        return
+        return;
       }
       this.todos.push({
         id: this.idForTodo,
         title: this.newTodo,
         completed: false,
         editing: false,
-      })
-      this.newTodo = ''
-      this.idForTodo++
+      });
+      this.newTodo = "";
+      this.idForTodo++;
     },
-     removeTodo(index) {
-      this.todos.splice(index, 1)
+    removeTodo(index) {
+      this.todos.splice(index, 1);
     },
     editTodo(todo) {
-      this.beforeEditCache = todo.title
-      todo.editing = true
+      this.beforeEditCache = todo.title;
+      todo.editing = true;
     },
     doneEdit(todo) {
-      if (todo.title.trim() == '') {
-        todo.title = this.beforeEditCache
+      if (todo.title.trim() == "") {
+        todo.title = this.beforeEditCache;
       }
-      todo.editing = false
+      todo.editing = false;
     },
     cancelEdit(todo) {
-      todo.title = this.beforeEditCache
-      todo.editing = false
+      todo.title = this.beforeEditCache;
+      todo.editing = false;
     },
     checkAllTodos() {
-      this.todos.forEach((todo) => todo.completed = event.target.checked)
+      this.todos.forEach((todo) => (todo.completed = event.target.checked));
     },
-     clearCompleted() {
-      this.todos = this.todos.filter(todo => !todo.completed)
+    clearCompleted() {
+      this.todos = this.todos.filter((todo) => !todo.completed);
     },
     // closeModal() {
     //   this.show = false;
@@ -440,7 +461,7 @@ hr {
   }
 }
 
- .active {
-    background: lightgreen;
-  }
+.active {
+  background: lightgreen;
+}
 </style>
